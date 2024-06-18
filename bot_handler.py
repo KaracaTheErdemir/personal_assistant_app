@@ -17,68 +17,44 @@ config = exc.get_telegram_config()
 TELEGRAM_TOKEN = config['token']
 CHAT_ID = config['chat_id']
 
-# Define states for the ConversationHandler
-FIRST, SECOND = range(2)
-
 # Handler for the /start command
-def start(update: Update, context):
-    update.message.reply_text("Hello! This is your bot.")
-    return FIRST
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Hello! This is your bot.")
 
 # Handler for the /cancel command
-def cancel(update: Update, context):
-    update.message.reply_text("Cancelled.")
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Cancelled.")
     return ConversationHandler.END
 
-# Handler for the first step in the conversation
-def step_one(update: Update, context):
-    update.message.reply_text("You are in step one. Please type something.")
-
-    # Set the next step as SECOND
-    return SECOND
-
-# Handler for the second step in the conversation
-def step_two(update: Update, context):
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_input = update.message.text
-    update.message.reply_text(f"You typed: {user_input}")
+    message = f"did you just say {user_input}?"
+    logging.info("are we here?")
+    await update.message.reply_text(f"Received your message: {update.message.text}")
 
-    return ConversationHandler.END  # End the conversation
+    await send_message(message)
 
-async def handle_message(update: Update):
-    await update.message.reply_text(f"yolo swag")
-
-
-async def send_message():
+async def send_message(message):
     # Create a Bot instance
     bot = Bot(token=TELEGRAM_TOKEN)
     # Send a message
-    await bot.send_message(chat_id=CHAT_ID, text='IM ALIVE')
+    await bot.send_message(chat_id=CHAT_ID, text=message)
 
 async def start_bot():
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
+    try:
+        logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                            level=logging.INFO)
+        logging.getLogger('httpx').setLevel(logging.WARNING) # To avoid the flood of httpx info messages.
 
-    app = Application.builder().token(TELEGRAM_TOKEN).build()
+        app = Application.builder().token(TELEGRAM_TOKEN).build()
+        # Add handlers to the Application
+        app.add_handler(CommandHandler('cancel', cancel))
+        app.add_handler(CommandHandler('start', start))
+        app.add_handler(MessageHandler(~filters.COMMAND, handle_message))
+        logging.info("Starting the bot")
 
-    # Add handlers to the Application
-    app.add_handler(CommandHandler('start', start))
-    app.add_handler(CommandHandler('cancel', cancel))
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
-    app.add_handler(ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
-        states={
-            FIRST: [MessageHandler(filters.TEXT, step_one)],
-            SECOND: [MessageHandler(filters.TEXT, step_two)]
-        },
-        fallbacks=[CommandHandler('cancel', cancel)]
-    ))
-    logging.info("Starthing the bot")
-    await send_message()
-    await app.initialize()
-    await app.start()
-    await app.updater.start_polling()
-    # Start the bot
-    # await app.run_polling()
-
-    # Run the bot until the user presses Ctrl-C
-    # await app.idle()
+        await app.initialize()
+        await app.start()
+        await app.updater.start_polling()
+    except Exception as e:
+            logging.error(f"An error occurred in start_bot: {type(e).__name__} - {str(e)}")
