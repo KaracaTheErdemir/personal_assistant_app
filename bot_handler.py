@@ -20,19 +20,23 @@ CHAT_ID = config['chat_id']
 # Handler for the /start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hello! This is your bot.")
+    context.user_data['started'] = True
 
 # Handler for the /cancel command
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Cancelled.")
-    return ConversationHandler.END
+    context.user_data['started'] = False
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_input = update.message.text
-    message = f"did you just say {user_input}?"
-    logging.info("are we here?")
-    await update.message.reply_text(f"Received your message: {update.message.text}")
+    if context.user_data.get('started'):
+        user_input = update.message.text
+        message = f"did you just say {user_input}?"
+        logging.info("are we here?")
+        await update.message.reply_text(f"Received your message: {update.message.text}")
 
-    await send_message(message)
+        await send_message(message)
+    else:
+        await update.message.reply_text("Please use /start to begin.")
 
 async def send_message(message):
     # Create a Bot instance
