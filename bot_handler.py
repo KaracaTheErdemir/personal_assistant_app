@@ -50,7 +50,7 @@ async def start_bot():
         # Add handlers to the Application
         app.add_handler(CommandHandler('cancel', cancel))
         app.add_handler(CommandHandler('start', start))
-        app.add_handler(MessageHandler(~filters.COMMAND, handle_message))
+        app.add_handler(MessageHandler(filters.Text(), handle_message))
         logging.info("Starting the bot")
 
         await app.initialize()
