@@ -13,6 +13,8 @@ from telegram.ext import (
     Application,
 )
 
+from handlers.message_handler import meeting_entry
+
 config = exc.get_telegram_config()
 TELEGRAM_TOKEN = config['token']
 CHAT_ID = config['chat_id']
@@ -32,11 +34,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_input = update.message.text
         message = f"did you just say {user_input}?"
         logging.info("are we here?")
-        await update.message.reply_text(f"Received your message: {update.message.text}")
-
-        await send_message(message)
+        mes = meeting_entry(user_input)
+        #await update.message.reply_text(f"{mes}")
+        
+        await send_message(mes)
     else:
         await update.message.reply_text("Please use /start to begin.")
+
 
 async def send_message(message):
     # Create a Bot instance
