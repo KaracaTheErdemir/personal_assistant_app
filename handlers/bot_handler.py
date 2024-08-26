@@ -74,48 +74,31 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     arguments = update.message.text.split()[1:]  # The arguments after the command
 
     # Based on the command, call the appropriate function
-    if command == '/track':
-        if len(arguments) > 0 and arguments[0] == 'habit':
-            response = track_habit(' '.join(arguments[1:]))
-        elif len(arguments) > 0 and arguments[0] == 'list':
-            response = list_habits(' '.join(arguments[1:]))
+    try:
+        # Split the message into command and option
+        parts = message.split()
+        
+        if len(parts) < 2 or not parts[1].startswith('-'):
+            return "Invalid command format. Use an option starting with '-' after the command."
+        
+        command = parts[0]
+        option = parts[1]
+
+        # Route the command and option to the appropriate function
+        if command == '/new':
+            return new(option)
+        elif command == '/track':
+            return track(option)
+        elif command == '/list':
+            return list_data(option)
+        elif command == '/report':
+            return report(option)
         else:
-            response = "Invalid subcommand for /track."
-    
-    elif command == '/meeting':
-        if len(arguments) > 0 and arguments[0] == 'new':
-            response = new_meeting(' '.join(arguments[1:]))
-        elif len(arguments) > 0 and arguments[0] == 'list':
-            response = list_meetings(' '.join(arguments[1:]))
-        else:
-            response = "Invalid subcommand for /meeting."
-    
-    elif command == '/objective':
-        if len(arguments) > 0 and arguments[0] == 'set':
-            response = set_objective(' '.join(arguments[1:]))
-        elif len(arguments) > 0 and arguments[0] == 'list':
-            response = list_objectives(' '.join(arguments[1:]))
-        else:
-            response = "Invalid subcommand for /objective."
-    
-    elif command == '/friend':
-        if len(arguments) > 0 and arguments[0] == 'new':
-            response = new_friend(' '.join(arguments[1:]))
-        elif len(arguments) > 0 and arguments[0] == 'list':
-            response = list_friends(' '.join(arguments[1:]))
-        else:
-            response = "Invalid subcommand for /friend."
-    
-    elif command == '/expense':
-        if len(arguments) > 0 and arguments[0] == 'new':
-            response = new_expense(' '.join(arguments[1:]))
-        elif len(arguments) > 0 and arguments[0] == 'list':
-            response = list_expenses(' '.join(arguments[1:]))
-        else:
-            response = "Invalid subcommand for /expense."
-    
-    else:
-        response = "Unknown command."
+            return "Unknown command."
+    except Exception as e:
+        logging.error(f"Error handling command: {type(e).__name__} - {str(e)}")
+        return "An error occurred while processing the command."
+
     
     # Send the response back to the user
     await update.message.reply_text(response)
