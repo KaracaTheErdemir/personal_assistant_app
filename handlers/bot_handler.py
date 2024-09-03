@@ -12,8 +12,8 @@ from telegram.ext import (
     Application,
 )
 sys.path.append(os.path.abspath('/Users/hermestrismegistus/personal_assistant_app'))
-from executor import get_telegram_config
-from handlers.command_handler import list_expenses, list_friends, list_habits, list_meetings, new_expense, new_friend, new_meeting, track_habit
+from config_manager import get_telegram_config
+from handlers.command_handler import list_entries, new_entry, report_entries, track_entry
 
 config = get_telegram_config()
 TELEGRAM_TOKEN = config['token']
@@ -70,13 +70,12 @@ from telegram.ext import CommandHandler
 
 async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Extract the command and its arguments
-    command = update.message.text.split()[0]  # The command itself (e.g., /start)
-    arguments = update.message.text.split()[1:]  # The arguments after the command
+
 
     # Based on the command, call the appropriate function
     try:
         # Split the message into command and option
-        parts = message.split()
+        parts = update.message.text.split()
         
         if len(parts) < 2 or not parts[1].startswith('-'):
             return "Invalid command format. Use an option starting with '-' after the command."
@@ -86,13 +85,13 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         # Route the command and option to the appropriate function
         if command == '/new':
-            return new(option)
+            return new_entry(option)
         elif command == '/track':
-            return track(option)
+            return track_entry(option)
         elif command == '/list':
-            return list_data(option)
+            return list_entries(option)
         elif command == '/report':
-            return report(option)
+            return report_entries(option)
         else:
             return "Unknown command."
     except Exception as e:

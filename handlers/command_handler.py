@@ -1,7 +1,7 @@
 import logging
-from query_handler import write_to_db, read_from_db
+from handlers.query_handler import insert_data, update_data, fetch_data
 
-def new(option):
+def new_entry(option):
     try:
         logging.info(f"Executing /new with option {option}")
         # Call the database function to insert data
@@ -10,7 +10,7 @@ def new(option):
         logging.error(f"Error in new: {type(e).__name__} - {str(e)}")
         return "An error occurred while processing /new."
 
-def track(option):
+def track_entry(option):
     try:
         logging.info(f"Executing /track with option {option}")
         # Call the database function to update data
@@ -19,7 +19,7 @@ def track(option):
         logging.error(f"Error in track: {type(e).__name__} - {str(e)}")
         return "An error occurred while processing /track."
 
-def list_data(option):
+def list_entries(option):
     try:
         logging.info(f"Executing /list with option {option}")
         # Call the database function to fetch data
@@ -28,7 +28,7 @@ def list_data(option):
         logging.error(f"Error in list_data: {type(e).__name__} - {str(e)}")
         return "An error occurred while processing /list."
 
-def report(option):
+def report_entries(option):
     try:
         logging.info(f"Executing /report with option {option}")
         # Call the database function to fetch data for reporting
