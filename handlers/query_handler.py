@@ -66,3 +66,21 @@ def update_data(option):
 # insert_data("your_table", {"column1": "value1", "column2": "value2"})
 # data = fetch_data("SELECT * FROM your_table WHERE condition")
 # print(data)
+
+def delete_data(table_name, data):
+    # will be corrected
+    connection = connect_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            columns = ', '.join(data.keys())
+            values = ', '.join([f"%({key})s" for key in data.keys()])
+            insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({values})"
+            cursor.execute(insert_query, data)
+            connection.commit()
+            logging.info(f"Data inserted into table '{table_name}'")
+        except Exception as error:
+            logging.info("Error inserting data:", error)
+        finally:
+            cursor.close()
+            connection.close()
