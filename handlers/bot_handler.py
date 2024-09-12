@@ -44,7 +44,7 @@ async def start_bot():
 
         app = Application.builder().token(TELEGRAM_TOKEN).build()
         # Add handlers to the Application
-        app.add_handler(MessageHandler(filters.Command, handle_command))
+        app.add_handler(MessageHandler(filters.TEXT, handle_command))
         #TODO: change this to reading command lines instead
         #app.add_handler(MessageHandler(filters.Text(), handle_message))
         logging.info("Starting the bot")
@@ -62,63 +62,63 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Based on the command, call the appropriate function
     try:
         # Split the message into command and option
-        parts = update.message.text.split()
+        arguments = update.message.text.split()
+        print(arguments)
+        if len(arguments) < 2:
+            return "Invalid number of arguments"
         
-        if len(parts) < 2:
-            return "Invalid command format. Use an option starting with '-' after the command."
-        
-        command = parts[0]
-        option = parts[1]
-        payload = parts
+        command = arguments[0]
+        option = arguments[1]
         # Route the command and option to the appropriate function
 
         if command == '/new':
             if option == 'friend':
-                return new_friend(parts)
+                await send_message(f"adding friend: {arguments[2]}")
+                return new_friend(arguments)
             elif option == 'meeting':
-                return new_meeting(parts)
+                return new_meeting(arguments)
             elif option == 'expense':
-                return new_expense(parts)
+                return new_expense(arguments)
             elif option == 'habit':
-                return new_habit(parts)
+                return new_habit(arguments)
             elif option == 'plan':
-                return new_todo(parts)
+                return new_todo(arguments)
             else:
                 return "Invalid option for /new."
 
         elif command == '/update':
             if option == 'friend':
-                return update_friend(parts)
+                return update_friend(arguments)
             elif option == 'meeting':
-                return update_meeting(parts)
+                return update_meeting(arguments)
             elif option == 'expense':
-                return update_expense(parts)
+                return update_expense(arguments)
             elif option == 'habit':
-                return update_habit(parts)
+                return update_habit(arguments)
             elif option == 'todo':
-                return update_todo(parts)
+                return update_todo(arguments)
             else:
                 return "Invalid option for /update."
 
         elif command == '/track':
             if option == 'habit':
-                return track_habit(parts)
+                return track_habit(arguments)
             elif option == 'plan':
-                return track_todo(parts)
+                return track_todo(arguments)
             else:
                 return "Invalid option for /track."
 
         elif command == '/list':
             if option == 'friends':
-                return list_friends(parts)
+                return list_friends(arguments)
             elif option == 'meetings':
-                return list_meetings(parts)
+                return list_meetings(arguments)
             elif option == 'habits':
-                return list_habits(parts)
+                return list_habits(arguments)
             elif option == 'plans':
-                return list_todos(parts)
+                return list_todos(arguments)
             elif option == 'expenses':
-                return list_expenses(parts)
+                return list_expenses(arguments)
             else:
                 return "Invalid option for /list."
 
