@@ -12,25 +12,39 @@ def new_friend(parts):
 
 def new_meeting(parts):
     payload = {
-        "name" : parts[2],
-        "full_name" : parts[3],
-        "sex" : parts[4]
+        "people" : parts[2],
+        "place" : parts[3],
+        "category" : parts[4]
     }
     insert_data("meetings", payload)
     return "Scheduling a new meeting."
 
 def new_expense(parts):
-    payload = {"type": "expense", "data": parts}
-    insert_data(payload)
+    payload = {
+        "category" : parts[2],
+        "label" : parts[3],
+        "cost" : parts[4],
+        "currency" : parts[5]
+    }
+    insert_data("expenses", payload)
     return "Adding a new expense."
 
 def new_habit(parts):
-    payload = {"type": "habit", "data": parts}
+    payload = {
+        "category" : parts[2],
+        "label" : parts[3],
+        "priority" : parts[4]
+    }
     insert_data(payload)
     return "Tracking a new habit."
 
 def new_todo(parts):
-    payload = {"type": "todo", "data": parts}
+    payload = {
+        "category" : parts[2],
+        "label" : parts[3],
+        "priority" : parts[4],
+        "deadline" : parts[5]
+    }
     insert_data(payload)
     return "Creating a new todo."
 
