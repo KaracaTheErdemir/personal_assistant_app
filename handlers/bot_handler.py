@@ -88,6 +88,7 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         elif command == '/update':
             if option == 'friend':
+                await send_message(f"updating friend {arguments[3]}")
                 return update_friend(arguments)
             elif option == 'meeting':
                 return update_meeting(arguments)

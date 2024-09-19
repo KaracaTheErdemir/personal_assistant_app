@@ -53,14 +53,22 @@ def fetch_data(query):
             cursor.close()
             connection.close()
 
-def update_data(option):
-    try:
-        logging.info(f"Updating data for option: {option}")
-        # Database update logic here
-        return f"Data for {option} updated successfully."
-    except Exception as e:
-        logging.error(f"Error updating data: {type(e).__name__} - {str(e)}")
-        return "An error occurred while updating data."
+def update_data(table_name, data):
+    connection = connect_db()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            update_column, update_value = list(data.items())[1]
+            identifier_column, identifier_value = list(data.items())[0]
+            insert_query = f"UPDATE {table_name} SET {update_column} = '{update_value}' WHERE {identifier_column} = '{identifier_value}';"
+            cursor.execute(insert_query, data)
+            connection.commit()
+            logging.info(f"Data inserted into table '{table_name}'")
+        except Exception as error:
+            logging.info("Error inserting data:", error)
+        finally:
+            cursor.close()
+            connection.close()
 
 # Example Usage:
 # insert_data("your_table", {"column1": "value1", "column2": "value2"})

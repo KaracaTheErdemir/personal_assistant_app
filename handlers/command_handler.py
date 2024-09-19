@@ -2,20 +2,21 @@ import logging
 from handlers.query_handler import delete_data, insert_data, update_data, fetch_data
 
 def new_friend(parts):
-    print("am i here?")
     payload = {
         "name" : parts[2],
         "full_name" : parts[3],
         "sex" : parts[4]
     }
-
-    # Call insert_data from query_handler with payload
     insert_data("friends", payload)
     return "Adding a new friend."
 
 def new_meeting(parts):
-    payload = {"type": "meeting", "data": parts}
-    insert_data(payload)
+    payload = {
+        "name" : parts[2],
+        "full_name" : parts[3],
+        "sex" : parts[4]
+    }
+    insert_data("meetings", payload)
     return "Scheduling a new meeting."
 
 def new_expense(parts):
@@ -34,9 +35,17 @@ def new_todo(parts):
     return "Creating a new todo."
 
 def update_friend(parts):
-    payload = {"type": "friend", "data": parts}
-    # Call update_data from query_handler with payload
-    update_data(payload)
+    option = parts[2]
+    payload = {
+        "full_name": parts[3]
+    }
+    if option == '-p':
+        payload["profession"] = parts[4]
+    elif option == '-f':
+        payload["friends_since"] = parts[4]
+    elif option == '-b':
+        payload["birth_date"] = parts[4]
+    update_data("friends", payload)
     return "Updating friend."
 
 def update_meeting(parts):
