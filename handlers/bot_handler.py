@@ -76,6 +76,7 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await send_message(f"adding friend: {arguments[2]}")
                 return new_friend(arguments)
             elif option == 'meeting':
+                await send_message(f"meeting with {arguments[2]} in {arguments[3]}")
                 return new_meeting(arguments)
             elif option == 'expense':
                 return new_expense(arguments)

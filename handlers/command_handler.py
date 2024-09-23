@@ -1,4 +1,5 @@
 import logging
+import datetime
 from handlers.query_handler import delete_data, insert_data, update_data, fetch_data
 
 def new_friend(parts):
@@ -14,7 +15,8 @@ def new_meeting(parts):
     payload = {
         "people" : parts[2],
         "place" : parts[3],
-        "category" : parts[4]
+        "category" : parts[4],
+        "meeting_date" : datetime.datetime.now()
     }
     insert_data("meetings", payload)
     return "Scheduling a new meeting."
