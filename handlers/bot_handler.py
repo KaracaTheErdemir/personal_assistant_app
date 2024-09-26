@@ -1,6 +1,8 @@
 import sys
 import os
 import logging
+import shlex
+
 from telegram import Bot, ForceReply, Update
 from telegram.ext import (
     Updater,
@@ -62,9 +64,11 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Based on the command, call the appropriate function
     try:
         # Split the message into command and option
-        arguments = update.message.text.split()
-        print(arguments)
+        line = update.message.text
+        print(line)
+        arguments = shlex.split(line)
         if len(arguments) < 2:
+            await send_message(f"Invalid number of arguments!")
             return "Invalid number of arguments"
         
         command = arguments[0]
@@ -123,8 +127,6 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return list_expenses(arguments)
             else:
                 return "Invalid option for /list."
-
-
         else:
             return "Unknown command."
     except Exception as e:

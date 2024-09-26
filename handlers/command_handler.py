@@ -1,5 +1,6 @@
 import logging
 import datetime
+
 from handlers.query_handler import delete_data, insert_data, update_data, fetch_data
 
 def new_friend(parts):
