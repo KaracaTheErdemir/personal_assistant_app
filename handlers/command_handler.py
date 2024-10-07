@@ -27,7 +27,8 @@ def new_expense(parts):
         "category" : parts[2],
         "label" : parts[3],
         "cost" : parts[4],
-        "currency" : parts[5]
+        "currency" : parts[5],
+        "create_date": datetime.datetime.now()
     }
     insert_data("expenses", payload)
     return "Adding a new expense."
@@ -53,8 +54,9 @@ def new_todo(parts):
 
 def update_friend(parts):
     option = parts[2]
+    full_name = parts[3]
     payload = {
-        "full_name": parts[3]
+        "full_name": full_name
     }
     if option == '-p':
         payload["profession"] = parts[4]
@@ -63,26 +65,52 @@ def update_friend(parts):
     elif option == '-b':
         payload["birth_date"] = parts[4]
     update_data("friends", payload)
+    logging.info(f"Updating friend {full_name} with option {option}")
     return "Updating friend."
 
 def update_meeting(parts):
-    payload = {"type": "meeting", "data": parts}
-    update_data(payload)
+    option = parts[2]
+    id = parts[3]
+    payload = {
+        "id": id
+    }
+    if option == '-d':
+        payload["duration"] = parts[4]
+    elif option == '-n':
+        payload["note"] = parts[4]
+    update_data("meetings", payload)
+    logging.info(f"Updating meeting with id {id} and option {option}")
     return "Updating meeting."
 
-def update_expense(parts):
-    payload = {"type": "expense", "data": parts}
-    update_data(payload)
-    return "Updating expense."
+#def update_expense(parts):
+#    payload = {"type": "expense", "data": parts}
+#    update_data(payload)
+#    return "Updating expense."
 
 def update_habit(parts):
-    payload = {"type": "habit", "data": parts}
-    update_data(payload)
+    option = parts[2]
+    id = parts[3]
+    payload = {
+        "id": id
+    }
+    if option == '-p':
+        payload["priority"] = parts[4]
+    update_data("meetings", payload)
+    logging.info(f"Updating habit with id {id} and option {option}")
     return "Updating habit."
 
 def update_todo(parts):
-    payload = {"type": "todo", "data": parts}
+    option = parts[2]
+    id = parts[3]
+    payload = {
+        "id": id
+    }
+    if option == '-p':
+        payload["priority"] = parts[4]
+    elif option == '-d':
+        payload["deadline"] = parts[4]
     update_data(payload)
+    logging.info(f"Updating todo with id {id} and option {option}")
     return "Updating todo."
 
 def delete_friend(parts):
@@ -137,10 +165,9 @@ def list_friends(parts):
     fetch_data(payload)
     return "Listing friends."
 
-def list_meetings(parts):
-    payload = {"type": "meetings", "data": parts}
-    fetch_data(payload)
-    return "Listing meetings."
+def list_meetings(limit):
+    result = fetch_data("meetings", limit)
+    return result
 
 def list_expenses(parts):
     payload = {"type": "expenses", "data": parts}
