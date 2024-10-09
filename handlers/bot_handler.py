@@ -1,3 +1,4 @@
+import json
 import sys
 import os
 import logging
@@ -15,7 +16,7 @@ from telegram.ext import (
 )
 #sys.path.append(os.path.abspath('/Users/hermestrismegistus/personal_assistant_app'))
 from config_manager import get_telegram_config
-from handlers.command_handler import list_expenses, list_friends, list_habits, list_meetings, list_todos, new_expense, new_friend, new_habit, new_meeting, new_todo, track_habit, track_todo, update_expense, update_friend, update_habit, update_meeting, update_todo
+from handlers.command_handler import list_expenses, list_friends, list_habits, list_meetings, list_todos, new_expense, new_friend, new_habit, new_meeting, new_todo, track_habit, track_todo, update_friend, update_habit, update_meeting, update_todo
 
 config = get_telegram_config()
 TELEGRAM_TOKEN = config['token']
@@ -47,8 +48,7 @@ async def start_bot():
         app = Application.builder().token(TELEGRAM_TOKEN).build()
         # Add handlers to the Application
         app.add_handler(MessageHandler(filters.TEXT, handle_command))
-        #TODO: change this to reading command lines instead
-        #app.add_handler(MessageHandler(filters.Text(), handle_message))
+        await send_message("I am alive.\nWelcome!")
         logging.info("Starting the bot")
 
         await app.initialize()
