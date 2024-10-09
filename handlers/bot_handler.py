@@ -29,15 +29,17 @@ async def send_message(message):
     await bot.send_message(chat_id=CHAT_ID, text=message)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if context.user_data.get('started'):
-        user_input = update.message.text
-        message = f"did you just say {user_input}?"
-        #mes = meeting_entry(user_input)
-        #await update.message.reply_text(f"{mes}")
+    try:
+        # Call handle_command and get the return string
+        response_message =  await handle_command(update, context)
+
+        # Send the response back to the user
+        await send_message(response_message)
+
+    except Exception as e:
+        logging.error(f"Error in handle_message: {type(e).__name__} - {str(e)}")
+        await send_message(e)
         
-        await send_message(message)
-    else:
-        await update.message.reply_text("Please use /start to begin.")
 
 async def start_bot():
     try:
@@ -47,7 +49,7 @@ async def start_bot():
 
         app = Application.builder().token(TELEGRAM_TOKEN).build()
         # Add handlers to the Application
-        app.add_handler(MessageHandler(filters.TEXT, handle_command))
+        app.add_handler(MessageHandler(filters.TEXT, handle_message))
         await send_message("I am alive.\nWelcome!")
         logging.info("Starting the bot")
 
