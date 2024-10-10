@@ -81,14 +81,13 @@ def delete_data(table_name, data):
     if connection:
         try:
             cursor = connection.cursor()
-            columns = ', '.join(data.keys())
-            values = ', '.join([f"%({key})s" for key in data.keys()])
-            insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({values})"
-            cursor.execute(insert_query, data)
+            column_name, column_value = list(data.items())[0]
+            delete_query = f"DELETE FROM {table_name} WHERE {column_name} = %s"
+            cursor.execute(delete_query, (column_value,))
             connection.commit()
-            logging.info(f"Data inserted into table '{table_name}'")
+            logging.info(f"Data deleted from table '{table_name}'")
         except Exception as error:
-            logging.info("Error inserting data:", error)
+            logging.info("Error deleting data:", error)
         finally:
             cursor.close()
             connection.close()

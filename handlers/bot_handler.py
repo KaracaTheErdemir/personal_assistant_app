@@ -129,6 +129,21 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return list_expenses(arguments)
             else:
                 return "Invalid option for /list."
+            
+        elif command == '/delete':
+            if option == 'friend':
+                return delete_friend(arguments)
+            elif option == 'meetings':
+                result = delete_meeting(arguments)
+                return result
+            elif option == 'habits':
+                return delete_habit(arguments)
+            elif option == 'plans':
+                return delete_todo(arguments)
+            elif option == 'expenses':
+                return delete_expense(arguments)
+            else:
+                return "Invalid option for /list."
         else:
             return "Unknown command."
     except Exception as e:

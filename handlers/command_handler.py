@@ -114,14 +114,21 @@ def update_todo(parts):
     return "Updating todo."
 
 def delete_friend(parts):
-    payload = {"type": "friend", "data": parts}
-    # Call delete_data from query_handler with payload
-    delete_data(payload)
+    row_id = parts[2]
+    payload = {
+        "friend_id": row_id
+    }
+    delete_data("friends", payload)
+    logging.info(f"Deleting friend with id: {row_id}")    # Call delete_data from query_handler with payload
     return "Deleting friend."
 
 def delete_meeting(parts):
-    payload = {"type": "meeting", "data": parts}
-    delete_data(payload)
+    row_id = parts[2]
+    payload = {
+        "meeting_id": row_id
+    }
+    delete_data("meetings", payload)
+    logging.info(f"Deleting meeting with id: {row_id}")    # Call delete_data from query_handler with payload
     return "Deleting meeting."
 
 def delete_expense(parts):
