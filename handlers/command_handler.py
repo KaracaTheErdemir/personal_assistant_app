@@ -17,7 +17,7 @@ def new_meeting(parts):
         "people" : parts[2],
         "place" : parts[3],
         "category" : parts[4],
-        "meeting_date" : datetime.datetime.now()
+        "meeting_date" : datetime.datetime.now().date().isoformat()
     }
     insert_data("meetings", payload)
     return "Scheduling a new meeting."
@@ -28,7 +28,7 @@ def new_expense(parts):
         "label" : parts[3],
         "cost" : parts[4],
         "currency" : parts[5],
-        "create_date": datetime.datetime.now()
+        "create_date": datetime.datetime.now().date().isoformat()
     }
     insert_data("expenses", payload)
     return "Adding a new expense."
@@ -63,7 +63,7 @@ def update_friend(parts):
     elif option == '-f':
         payload["friends_since"] = parts[4]
     elif option == '-b':
-        payload["birth_date"] = parts[4]
+        payload["birth_date"] = parts[4].date().isoformat()
     update_data("friends", payload)
     logging.info(f"Updating friend {full_name} with option {option}")
     return "Updating friend."
