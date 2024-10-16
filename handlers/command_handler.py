@@ -1,3 +1,4 @@
+import json
 import logging
 import datetime
 
@@ -166,14 +167,24 @@ def track_todo(parts):
     update_data(payload)
     return "Tracking todo."
 
-def list_friends(parts):
-    payload = {"type": "friends", "data": parts}
-    # Call fetch_data from query_handler with payload
-    fetch_data(payload)
-    return "Listing friends."
+def list_friends(limit):
+    # This method lists friends.
+    limit = int(limit)
+    query_result = fetch_data("friends", limit)
+    result = []
+    result.append("Name:      Meet_Count:      Last_Seen:")
+    i = 1
+    for entry in query_result:
+        #result[i] = entry["full_name"] + " " + entry["meet_score"] + " " + entry["last_seen"]
+        result.append(str(i) + ". "+ entry["full_name"])
+        i = i + 1
+    return result
 
 def list_meetings(limit):
-    result = fetch_data("meetings", limit)
+    limit = int(limit)
+    query_result = fetch_data("meetings", limit)
+    result = str(query_result[0])
+
     return result
 
 def list_expenses(parts):
