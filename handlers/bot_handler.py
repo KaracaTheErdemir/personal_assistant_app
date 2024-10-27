@@ -14,9 +14,10 @@ from telegram.ext import (
     filters,
     Application,
 )
-#sys.path.append(os.path.abspath('/Users/hermestrismegistus/personal_assistant_app'))
+#sys.path.append(os.path.abspath('/Users/hermestrismegistus/per
+# sonal_assistant_app'))
 from config_manager import get_telegram_config
-from handlers.command_handler import list_expenses, list_friends, list_habits, list_meetings, list_todos, new_expense, new_friend, new_habit, new_meeting, new_todo, track_habit, track_todo, update_friend, update_habit, update_meeting, update_todo
+from handlers.command_handler import delete_expense, delete_friend, delete_habit, delete_meeting, delete_todo, list_expenses, list_friends, list_habits, list_meetings, list_todos, new_expense, new_friend, new_habit, new_meeting, new_todo, track_habit, track_todo, update_friend, update_habit, update_meeting, update_todo, list_asd
 
 config = get_telegram_config()
 TELEGRAM_TOKEN = config['token']
@@ -26,13 +27,23 @@ async def send_message(message):
     # Create a Bot instance
     bot = Bot(token=TELEGRAM_TOKEN)
     # Send a message
+    #unicode_message = message.encode('utf-8').decode('utf-8')
+
     await bot.send_message(chat_id=CHAT_ID, text=message)
+
+async def send_list(list):
+    # Create a Bot instance
+    bot = Bot(token=TELEGRAM_TOKEN)
+    # Send a message
+    #unicode_message = message.encode('utf-8').decode('utf-8')
+    for line in list:
+        await bot.send_message(chat_id=CHAT_ID, text=line)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         # Call handle_command and get the return string
         response_message =  await handle_command(update, context)
-
+        print(response_message)
         # Send the response back to the user
         await send_message(response_message)
 
@@ -99,8 +110,6 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return update_friend(arguments)
             elif option == 'meeting':
                 return update_meeting(arguments)
-            elif option == 'expense':
-                return update_expense(arguments)
             elif option == 'habit':
                 return update_habit(arguments)
             elif option == 'todo':
@@ -120,7 +129,8 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if option == 'friends':
                 return list_friends(arguments)
             elif option == 'meetings':
-                return list_meetings(arguments)
+                result = list_meetings(arguments[2])
+                return result
             elif option == 'habits':
                 return list_habits(arguments)
             elif option == 'plans':
