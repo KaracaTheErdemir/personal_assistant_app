@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import logging
 
@@ -37,10 +38,11 @@ def new_habit(parts):
     payload = {
         "category" : parts[2],
         "label" : parts[3],
-        "priority" : parts[4]
+        "priority" : parts[4],
+        "create_date": datetime.datetime.now().date().isoformat()
     }
-    insert_data(payload)
-    return "Tracking a new habit."
+    insert_data("habits", payload)
+    return "Inserting a new habit."
 
 def new_todo(parts):
     payload = {
@@ -115,36 +117,36 @@ def update_todo(parts):
     return "Updating todo."
 
 def delete_friend(parts):
-    row_id = parts[2]
+    meeting_id = parts[2]
     payload = {
-        "friend_id": row_id
+        "friend_id": meeting_id
     }
     delete_data("friends", payload)
-    logging.info(f"Deleting friend with id: {row_id}")    # Call delete_data from query_handler with payload
+    logging.info(f"Deleting friend with id: {meeting_id}")    # Call delete_data from query_handler with payload
     return "Deleting friend."
 
 def delete_meeting(parts):
-    row_id = parts[2]
+    meeting_id = parts[2]
     payload = {
-        "meeting_id": row_id
+        "meeting_id": meeting_id
     }
     delete_data("meetings", payload)
-    logging.info(f"Deleting meeting with id: {row_id}")    # Call delete_data from query_handler with payload
+    logging.info(f"Deleting meeting with id: {meeting_id}")    # Call delete_data from query_handler with payload
     return "Deleting meeting."
 
 def delete_expense(parts):
     payload = {"type": "expense", "data": parts}
-    delete_data(payload)
+    delete_data("expenses", payload)
     return "Deleting expense."
 
 def delete_habit(parts):
-    payload = {"type": "habit", "data": parts}
-    delete_data(payload)
+    payload = {"type": "habit", "track_interval" : parts[5]}
+    delete_data("habits", payload)
     return "Deleting habit."
 
 def delete_todo(parts):
     payload = {"type": "todo", "data": parts}
-    delete_data(payload)
+    delete_data("todos", payload)
     return "Deleting todo."
 
 def track_meeting(parts):
@@ -172,24 +174,27 @@ def list_friends(limit):
     limit = int(limit)
     query_result = fetch_data("friends", limit)
     result = []
-    result.append(f"Name:   Meet_Count:   Last_Seen:")
+    result.append(f"ID / Name / Meet_Count / Last_Seen:\\n")
     i = 1
+
+    friend_id = 0
     friend_full_name = "Not Found"
     friend_meet_score = 0
     friend_last_seen = "N/A"
     for entry in query_result:
-        #result[i] = entry["full_name"] + " " + entry["meet_score"] + " " + entry["last_seen"]
+        if entry["friend_id"]:
+            friend_id = entry["friend_id"]
         if entry["full_name"]:
             friend_full_name = entry["full_name"]
         if entry["meet_score"]:
             friend_meet_score = entry["meet_score"]
         if entry["last_seen"]:
             friend_last_seen = entry["last_seen"]
-        result.append(f"{i}. {friend_full_name},   {friend_meet_score},   {friend_last_seen}")
+        result.append(f"{friend_id}: {friend_full_name} - {friend_meet_score} - {friend_last_seen}\n")
         i += 1
-    print(f"full name:{friend_full_name}")
-
-    return str(result)
+    result = str(result)
+    proper_result = result.strip("[]").replace("'", "")
+    return proper_result
 
 def list_meetings(limit):
     limit = int(limit)

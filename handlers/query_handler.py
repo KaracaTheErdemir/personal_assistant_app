@@ -38,13 +38,16 @@ def insert_data(table_name, data):
             cursor.close()
             connection.close()
 
-def fetch_data(query):
+def fetch_data(table_name, limit = 10):
     connection = connect_db()
     if connection:
         try:
             cursor = connection.cursor(cursor_factory=RealDictCursor)
-            cursor.execute(query)
+            fetch_query = f"SELECT * FROM {table_name} LIMIT %s"
+            cursor.execute(fetch_query, (limit,))
             result = cursor.fetchall()
+            logging.info(f"Fetch data from table: '{table_name}'")
+            print(result)
             return result
         except Exception as error:
             logging.info("Error fetching data:", error)
@@ -65,7 +68,7 @@ def update_data(table_name, data):
             connection.commit()
             logging.info(f"Data inserted into table '{table_name}'")
         except Exception as error:
-            logging.info("Error inserting data:", error)
+            logging.error("Error inserting data:", error)
         finally:
             cursor.close()
             connection.close()
