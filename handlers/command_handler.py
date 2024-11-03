@@ -1,6 +1,5 @@
 import json
 import logging
-import datetime
 
 from handlers.query_handler import delete_data, insert_data, update_data, fetch_data
 
@@ -64,7 +63,8 @@ def update_friend(parts):
     elif option == '-f':
         payload["friends_since"] = parts[4]
     elif option == '-b':
-        payload["birth_date"] = parts[4].date().isoformat()
+        birth_date = datetime.strptime(parts[4], "%d.%m.%Y").date().isoformat()   # Convert string to date
+        payload["birth_date"] = birth_date   
     update_data("friends", payload)
     logging.info(f"Updating friend {full_name} with option {option}")
     return "Updating friend."
