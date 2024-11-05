@@ -22,7 +22,7 @@ def new_meeting(parts):
         "people" : parts[2],
         "place" : parts[3],
         "category" : parts[4],
-        "meeting_date" : datetime.datetime.now().date().isoformat()
+        "meeting_date" : datetime.now().date().isoformat()
     }
     insert_data("meetings", payload)
     return "Scheduling a new meeting."
@@ -33,7 +33,7 @@ def new_expense(parts):
         "label" : parts[3],
         "cost" : parts[4],
         "currency" : parts[5],
-        "create_date": datetime.datetime.now().date().isoformat()
+        "create_date": datetime.now().date().isoformat()
     }
     insert_data("expenses", payload)
     return "Adding a new expense."
@@ -43,7 +43,7 @@ def new_habit(parts):
         "category" : parts[2],
         "label" : parts[3],
         "priority" : parts[4],
-        "create_date": datetime.datetime.now().date().isoformat()
+        "create_date": datetime.now().date().isoformat()
     }
     insert_data("habits", payload)
     return "Inserting a new habit."
@@ -79,7 +79,7 @@ def update_meeting(parts):
     option = parts[2]
     id = parts[3]
     payload = {
-        "id": id
+        "meeting_id": id
     }
     if option == '-d':
         payload["duration"] = parts[4]
