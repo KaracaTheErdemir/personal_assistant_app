@@ -17,7 +17,7 @@ from telegram.ext import (
 #sys.path.append(os.path.abspath('/Users/hermestrismegistus/per
 # sonal_assistant_app'))
 from config_manager import get_telegram_config
-from handlers.command_handler import delete_expense, delete_friend, delete_habit, delete_meeting, delete_todo, list_expenses, list_friends, list_habits, list_meetings, list_todos, new_expense, new_friend, new_habit, new_meeting, new_todo, track_habit, track_todo, update_friend, update_habit, update_meeting, update_todo
+from handlers.command_handler import delete_expense, delete_friend, delete_habit, delete_meeting, delete_todo, list_expenses, list_friends, list_habits, list_meetings, list_todos, new_expense, new_friend, new_habit, new_meeting, new_todo, track_habit, track_todo, update_friend, update_habit, update_meeting, update_todo, help
 
 config = get_telegram_config()
 TELEGRAM_TOKEN = config['token']
@@ -75,7 +75,8 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return "Invalid number of arguments"
         
         command = arguments[0]
-        option = arguments[1]
+        if command != '/help':
+            option = arguments[1]
         # Route the command and option to the appropriate function
 
         if command == '/new':
@@ -142,6 +143,9 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return delete_expense(arguments)
             else:
                 return "Invalid option for /delete."
+        elif command == '/help':
+            result = help()
+            return result
         else:
             return "Unknown command."
     except Exception as e:

@@ -4,6 +4,10 @@ import logging
 
 from handlers.query_handler import delete_data, insert_data, update_data, fetch_data
 
+def help():
+    help_text = "This is a personal assistant bot \n Commands: /new, /update, /delete, /track, /list \n Options: friend, habit, meeting, expense, todo \n example: /new friend Katy \"Katy Perry\" F"
+    return help_text
+
 def new_friend(parts):
     payload = {
         "name" : parts[2],
