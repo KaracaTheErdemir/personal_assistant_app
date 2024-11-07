@@ -63,12 +63,12 @@ def update_data(table_name, data):
             cursor = connection.cursor()
             update_column, update_value = list(data.items())[1]
             identifier_column, identifier_value = list(data.items())[0]
-            insert_query = f"UPDATE {table_name} SET {update_column} = '{update_value}' WHERE {identifier_column} = '{identifier_value}';"
-            cursor.execute(insert_query, data)
+            update_query = f"UPDATE {table_name} SET {update_column} = '{update_value}' WHERE {identifier_column} = '{identifier_value}';"
+            cursor.execute(update_query, data)
             connection.commit()
-            logging.info(f"Data inserted into table '{table_name}'")
+            logging.info(f"Data updated in table '{table_name}'")
         except Exception as error:
-            logging.error("Error inserting data:", error)
+            logging.error("Error updating data:", error)
         finally:
             cursor.close()
             connection.close()

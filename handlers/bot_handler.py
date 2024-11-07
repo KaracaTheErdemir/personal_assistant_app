@@ -70,9 +70,6 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Split the message into command and option
         line = update.message.text
         arguments = shlex.split(line)
-        if len(arguments) < 2:
-            await send_message(f"Invalid number of arguments!")
-            return "Invalid number of arguments"
         
         command = arguments[0]
         if command != '/help':
