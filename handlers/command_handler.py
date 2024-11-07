@@ -49,13 +49,14 @@ def new_habit(parts):
     return "Inserting a new habit."
 
 def new_todo(parts):
+    deadline = datetime.strptime(parts[4], "%d.%m.%Y").date().isoformat()
     payload = {
-        "category" : parts[2],
-        "label" : parts[3],
-        "priority" : parts[4],
-        "deadline" : parts[5]
+        "label" : parts[2],
+        "priority" : parts[3],
+        "deadline" : deadline,
+        "create_date": datetime.now().date().isoformat()
     }
-    insert_data(payload)
+    insert_data("todos", payload)
     return "Creating a new todo."
 
 def update_friend(parts):
