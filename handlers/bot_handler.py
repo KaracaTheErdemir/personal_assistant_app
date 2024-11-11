@@ -112,17 +112,18 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return "Invalid option for /track."
 
         elif command == '/list':
+            limit = arguments[2]
             if option == 'friends':
-                return list_friends(arguments[2])
+                return list_friends(limit)
             elif option == 'meetings':
-                result = list_meetings(arguments[2])
+                result = list_meetings(limit)
                 return result
             elif option == 'habits':
-                return list_habits(arguments)
+                return list_habits(limit)
             elif option == 'plans':
-                return list_todos(arguments)
+                return list_todos(limit)
             elif option == 'expenses':
-                return list_expenses(arguments)
+                return list_expenses(limit)
             else:
                 return "Invalid option for /list."
             
