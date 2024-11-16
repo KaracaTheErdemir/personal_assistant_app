@@ -15,7 +15,8 @@ def new_friend(parts):
         "sex" : parts[4]
     }
     insert_data("friends", payload)
-    return "Adding a new friend."
+    response = f"Adding new friend: {parts[3]}"
+    return response
 
 def new_meeting(parts):
     payload = {
@@ -25,7 +26,8 @@ def new_meeting(parts):
         "meeting_date" : datetime.now().date().isoformat()
     }
     insert_data("meetings", payload)
-    return "Scheduling a new meeting."
+    response = f"Meeting with: {parts[2]}"
+    return response
 
 def new_expense(parts):
     payload = {
@@ -195,7 +197,7 @@ def list_friends(limit):
             friend_meet_score = entry["meet_score"]
         if entry["last_seen"]:
             friend_last_seen = entry["last_seen"]
-        result.append(f"{friend_id}: {friend_full_name} - {friend_meet_score} - {friend_last_seen}\n")
+        result.append(f"{friend_id}: {friend_full_name} - {friend_meet_score} - {friend_last_seen}")
         i += 1
     result = str(result)
     proper_result = result.strip("[]").replace("'", "")
