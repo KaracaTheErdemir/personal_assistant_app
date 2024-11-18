@@ -181,25 +181,16 @@ def list_friends(limit):
     limit = int(limit)
     query_result = fetch_data("friends", limit)
     result = []
-    result.append(f"ID / Name / Meet_Count / Last_Seen:\\n")
-    i = 1
 
     friend_id = 0
     friend_full_name = "Not Found"
-    friend_meet_score = 0
-    friend_last_seen = "N/A"
     for entry in query_result:
         if entry["friend_id"]:
             friend_id = entry["friend_id"]
         if entry["full_name"]:
             friend_full_name = entry["full_name"]
-        if entry["meet_score"]:
-            friend_meet_score = entry["meet_score"]
-        if entry["last_seen"]:
-            friend_last_seen = entry["last_seen"]
-        result.append(f"{friend_id}: {friend_full_name} - {friend_meet_score} - {friend_last_seen}")
-        i += 1
-    result = str(result)
+        result.append(f"{friend_id}: {friend_full_name}")
+    result = str(result).replace(",", "\n")
     proper_result = result.strip("[]").replace("'", "")
     return proper_result
 

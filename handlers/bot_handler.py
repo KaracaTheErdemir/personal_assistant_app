@@ -114,7 +114,8 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif command == '/list':
             limit = arguments[2]
             if option == 'friends':
-                return list_friends(limit)
+                result = list_friends(limit)
+                return result
             elif option == 'meetings':
                 result = list_meetings(limit)
                 return result
