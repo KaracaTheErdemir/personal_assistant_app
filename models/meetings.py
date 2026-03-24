@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
 from db import Base
 
-class Task(db.Model):
-    __tablename__ = 'tasks'
+class Meeting(db.Model):
+    __tablename__ = 'meetings'
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     description = Column(String)
