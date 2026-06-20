@@ -1,8 +1,14 @@
-from app import db
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from datetime import datetime
+from sqlalchemy.orm import declarative_base
 
-class Habit(db.Model):
+Base = declarative_base()
+
+class Habit(Base):
     __tablename__ = 'habits'
-    friend_id = db.Column(db.Integer, primary_key=True)
-    habit_name = db.Column(db.String(50))
-    category = db.Column(db.String(50))
-    last_seen = db.Column(db.Date)
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    description = Column(String)
+    priority = Column(Integer, default=3)
+    is_completed = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.now)

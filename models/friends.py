@@ -1,10 +1,14 @@
-from app import db
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from datetime import datetime
+from sqlalchemy.orm import declarative_base
 
-class Friend(db.Model):
+Base = declarative_base()
+
+class Friend(Base):
     __tablename__ = 'friends'
-    friend_id = db.Column(db.Integer, primary_key=True)
-    friend_name = db.Column(db.String(50))
-    sex = db.Column(db.String(10))
-    profession = db.Column(db.String(50))
-    meet_score = db.Column(db.Integer)
-    last_seen = db.Column(db.Date)
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    description = Column(String)
+    priority = Column(Integer, default=3)
+    is_completed = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.now)

@@ -1,8 +1,10 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
-from db import Base
+from sqlalchemy.orm import declarative_base
 
-class Expense(db.Model):
+Base = declarative_base()
+
+class Expense(Base):
     __tablename__ = 'expenses'
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
