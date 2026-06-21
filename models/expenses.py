@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base()
+from db import Base
 
 class Expense(Base):
     __tablename__ = 'expenses'
