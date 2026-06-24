@@ -42,6 +42,85 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.error(f"Error in handle_message: {type(e).__name__} - {str(e)}")
         await send_message(e)
         
+async def direct_command(arguments):
+    length = len(arguments)
+    if length > 0: command = arguments[0]
+    if length > 1: option = arguments[1]
+    
+    if command == '/new':
+        if option == 'friend':
+            return new_friend(arguments)
+        elif option == 'meeting':
+            return new_meeting(arguments)
+        elif option == 'expense':
+            return new_expense(arguments)
+        elif option == 'habit':
+            return new_habit(arguments)
+        elif option == 'plan':
+            return new_todo(arguments)
+        else:
+            return "Invalid option for /new."
+
+    elif command == '/update':
+        if option == 'friend':
+            await send_message(f"updating friend {arguments[3]}")
+            return update_friend(arguments)
+        elif option == 'meeting':
+            return update_meeting(arguments)
+        elif option == 'habit':
+            return update_habit(arguments)
+        elif option == 'todo':
+            return update_todo(arguments)
+        else:
+            return "Invalid option for /update."
+
+    elif command == '/track':
+        if option == 'habit':
+            return track_habit(arguments)
+        elif option == 'plan':
+            return track_todo(arguments)
+        else:
+            return "Invalid option for /track."
+
+    elif command == '/list':
+        if length > 1:
+            limit = arguments[2]
+            if option == 'friends':
+                result = list_friends(limit)
+                return result
+            elif option == 'meetings':
+                result = list_meetings(limit)
+                return result
+            elif option == 'habits':
+                return list_habits(limit)
+            elif option == 'plans':
+                return list_todos(limit)
+            elif option == 'expenses':
+                return list_expenses(limit)
+            else:
+                return "Invalid option for /list."
+        else:
+            return "Invalid option for /list."
+        
+    elif command == '/delete':
+        if option == 'friend':
+            return delete_friend(arguments)
+        elif option == 'meeting':
+            result = delete_meeting(arguments)
+            return result
+        elif option == 'habit':
+            return delete_habit(arguments)
+        elif option == 'plan':
+            return delete_todo(arguments)
+        elif option == 'expense':
+            return delete_expense(arguments)
+        else:
+            return "Invalid option for /delete."
+    elif command == '/help':
+        result = help()
+        return result
+    else: 
+        return "Please write a proper command."
 
 async def start_bot():
     try:
@@ -72,84 +151,15 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         arguments = shlex.split(line)
         length = len(arguments)
         command = arguments[0]
-        if command != '/help':
-            option = arguments[1]
+        print(arguments)
+        print("length: " + str(length))
+
+
         # Route the command and option to the appropriate function
-
-        if command == '/new':
-            if option == 'friend':
-                return new_friend(arguments)
-            elif option == 'meeting':
-                return new_meeting(arguments)
-            elif option == 'expense':
-                return new_expense(arguments)
-            elif option == 'habit':
-                return new_habit(arguments)
-            elif option == 'plan':
-                return new_todo(arguments)
-            else:
-                return "Invalid option for /new."
-
-        elif command == '/update':
-            if option == 'friend':
-                await send_message(f"updating friend {arguments[3]}")
-                return update_friend(arguments)
-            elif option == 'meeting':
-                return update_meeting(arguments)
-            elif option == 'habit':
-                return update_habit(arguments)
-            elif option == 'todo':
-                return update_todo(arguments)
-            else:
-                return "Invalid option for /update."
-
-        elif command == '/track':
-            if option == 'habit':
-                return track_habit(arguments)
-            elif option == 'plan':
-                return track_todo(arguments)
-            else:
-                return "Invalid option for /track."
-
-        elif command == '/list':
-            if length > 1:
-                limit = arguments[2]
-                if option == 'friends':
-                    result = list_friends(limit)
-                    return result
-                elif option == 'meetings':
-                    result = list_meetings(limit)
-                    return result
-                elif option == 'habits':
-                    return list_habits(limit)
-                elif option == 'plans':
-                    return list_todos(limit)
-                elif option == 'expenses':
-                    return list_expenses(limit)
-                else:
-                    return "Invalid option for /list."
-            else:
-                return "Invalid option for /list."
-            
-        elif command == '/delete':
-            if option == 'friend':
-                return delete_friend(arguments)
-            elif option == 'meeting':
-                result = delete_meeting(arguments)
-                return result
-            elif option == 'habit':
-                return delete_habit(arguments)
-            elif option == 'plan':
-                return delete_todo(arguments)
-            elif option == 'expense':
-                return delete_expense(arguments)
-            else:
-                return "Invalid option for /delete."
-        elif command == '/help':
-            result = help()
-            return result
+        if command.startswith("/"):
+            return direct_command(arguments)
         else:
-            return "Unknown command."
+            return "That's not a command."
     except Exception as e:
         logging.error(f"Error handling command: {type(e).__name__} - {str(e)}")
         return "An error occurred while processing the command."
