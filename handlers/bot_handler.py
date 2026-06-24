@@ -70,7 +70,7 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Split the message into command and option
         line = update.message.text
         arguments = shlex.split(line)
-        
+        length = len(arguments)
         command = arguments[0]
         if command != '/help':
             option = arguments[1]
@@ -112,19 +112,22 @@ async def handle_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return "Invalid option for /track."
 
         elif command == '/list':
-            limit = arguments[2]
-            if option == 'friends':
-                result = list_friends(limit)
-                return result
-            elif option == 'meetings':
-                result = list_meetings(limit)
-                return result
-            elif option == 'habits':
-                return list_habits(limit)
-            elif option == 'plans':
-                return list_todos(limit)
-            elif option == 'expenses':
-                return list_expenses(limit)
+            if length > 1:
+                limit = arguments[2]
+                if option == 'friends':
+                    result = list_friends(limit)
+                    return result
+                elif option == 'meetings':
+                    result = list_meetings(limit)
+                    return result
+                elif option == 'habits':
+                    return list_habits(limit)
+                elif option == 'plans':
+                    return list_todos(limit)
+                elif option == 'expenses':
+                    return list_expenses(limit)
+                else:
+                    return "Invalid option for /list."
             else:
                 return "Invalid option for /list."
             
